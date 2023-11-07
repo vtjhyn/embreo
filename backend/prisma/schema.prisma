@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model CompanyHR {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  company        String
+  username       String  @unique
+  hashedPassword String
+  role           String  @default("HR")
+  events         Event[]
+}
+
+model Vendor {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  username       String  @unique
+  hashedPassword String
+  role           String  @default("Vendor")
+  events         Event[]
+}
+
+model Program {
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  name   String
+  events Event[]
+}
+
+model Location {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  address    String
+  postalCode String
+  event      Event[]
+}
+
+model Event {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  companyId      String    @db.ObjectId
+  company        CompanyHR @relation(fields: [companyId], references: [id])
+  proposedDates1 DateTime
+  proposedDates2 DateTime
+  proposedDates3 DateTime
+  locationId     String    @db.ObjectId
+  location       Location  @relation(fields: [locationId], references: [id])
+  nameId         String    @db.ObjectId
+  name           Program   @relation(fields: [nameId], references: [id])
+  status         String
+  remarks        String?
+  confirmedDate  DateTime
+  vendorId       String    @db.ObjectId
+  vendor         Vendor    @relation(fields: [nameId], references: [id])
+  createdAt      DateTime
+}
