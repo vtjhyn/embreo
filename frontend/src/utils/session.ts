@@ -1,4 +1,4 @@
-export function sessionGet(key) {
+export function sessionGet(key: string) {
   let stringValue = window.sessionStorage.getItem(key)
     if (stringValue !== null) {
       let value = JSON.parse(stringValue)
@@ -13,7 +13,7 @@ export function sessionGet(key) {
 }
 
 // add into session
-export function sessionSet(key, value, expirationInMin = 10) {
+export function sessionSet(key: string, value: string, expirationInMin = 10) {
   let expirationDate = new Date(new Date().getTime() + (expirationInMin * 60 * 1000 ))
     let newValue = {
     value: value,

@@ -1,16 +1,18 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { baseUrl } from "../../utils/axios";
 import { sessionSet } from "../../utils/session";
+import { FieldType } from "../../components/form/LoginForm";
 
-interface UserProps {
-  company?: String;
-  name?: String;
-  username: String;
-  password?: String;
-  tpye: String;
+export interface UserProps {
+  user?: {
+    id: string;
+    company: string;
+    username: string;
+  }
+  token?: string;
 }
 
-export const loginUser = createAsyncThunk(
+export const loginUser = createAsyncThunk<any, FieldType>(
   "auth/loginUser",
   async (payload, thunkAPI) => {
     try {

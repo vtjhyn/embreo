@@ -22,21 +22,25 @@ const items: TabsProps["items"] = [
 
 const Login = () => {
   const dispatch = useAppDispatch();
-  const loading = useAppSelector((state) => state.auth.isLoading)
+  const loading = useAppSelector((state) => state.auth.isLoading);
   const navigate = useNavigate();
   const [mode, setMode] = useState("HR");
 
   useEffect(() => {
-    if (sessionGet('token')) {
+    if (sessionGet("token")) {
       navigate("/");
     }
-  }, [sessionGet('token')]);
+  }, [sessionGet("token")]);
+
+  if (sessionGet("token")) {
+    return null;
+  }
 
   const handleLogin = async (data: FieldType) => {
     data.type = mode;
-    const { meta } = await dispatch(loginUser(data))
+    const { meta } = await dispatch(loginUser(data));
     if (meta.requestStatus === "fulfilled") {
-      console.log("Login berhasil")
+      console.log("Login berhasil");
       navigate("/", {
         replace: true,
       });

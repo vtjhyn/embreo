@@ -35,7 +35,6 @@ const ModalContent: React.FC<ModalContentProps> = ({ modalData, role }) => {
         </span>
       </p>
       <p>Date Created: {modalData?.dateCreated}</p>
-      <p>{role}</p>
       {role && role === 'Vendor' && (
         <VendorOption data={modalData?.confirmedDate} />
       )}

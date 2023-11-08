@@ -1,54 +1,59 @@
-import React from "react";
-import { Input, Select, Tabs } from "antd";
-import type { TabsProps } from "antd";
+import React, { useState, useMemo } from "react";
+import { Button, Input, Select } from "antd";
 
 interface VendorOptionProps {
   data?: String[];
 }
 
 const VendorOption: React.FC<VendorOptionProps> = ({ data }) => {
-  const onChange = (key: string) => {
-    console.log(key);
-  };
+  const [activeOption, setActiveOption] = useState<"APPROVE" | "REJECT" | null>(
+    null
+  );
 
-  const options = data?.map((data) => data);
-  console.log(options);
+  const options = useMemo(
+    () => data?.map((item) => ({ label: item, value: item })),
+    [data]
+  );
 
-  const items: TabsProps["items"] = [
-    {
-      key: "approve",
-      label: "APPROVE",
-      children: (
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex gap-8 justify-center items-center w-full">
+        <Button
+          className={`w-full  ${
+            activeOption === "APPROVE"
+              ? "bg-green-600 text-white"
+              : "bg-white text-green-600"
+          }`}
+          onClick={() => setActiveOption("APPROVE")}
+        >
+          Approve
+        </Button>
+        <Button
+          className={`w-full  ${
+            activeOption === "REJECT"
+              ? "bg-red-600 text-white"
+              : "bg-white text-red-600"
+          }`}
+          onClick={() => setActiveOption("REJECT")}
+        >
+          reject
+        </Button>
+      </div>
+      {activeOption === null ? null : activeOption === "APPROVE" ? (
         <div className="flex flex-col items-center justify-center text-center">
           <div>Choose confirm date</div>
           <Select
             style={{ width: 300 }}
-            options={data && data.map((item) => ({ label: item, value: item }))}
+            options={options}
           />
         </div>
-      ),
-    },
-    {
-      key: "reject",
-      label: "REJECT",
-      children: (
+      ) : (
         <div className="flex flex-col items-center justify-center text-center">
           <div>Input reason</div>
           <Input />
         </div>
-      ),
-    },
-  ];
-
-  return (
-    <Tabs
-      defaultActiveKey="1"
-      centered
-      size="large"
-      type="card"
-      items={items}
-      onChange={onChange}
-    />
+      )}
+    </div>
   );
 };
 

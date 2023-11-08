@@ -8,10 +8,11 @@ const AntConfig = ({children}: {children : React.ReactNode}) => {
       theme={{
         components: {
           Button: {
-            colorPrimary: "#435585",
+            colorPrimary: "#818FB4",
           },
           Table: {
             headerBg: '#435585',
+            headerColor: '#ffff',
             rowHoverBg: '#dae0f0',
           },
           Tabs: {
@@ -19,8 +20,8 @@ const AntConfig = ({children}: {children : React.ReactNode}) => {
           }
         },
         token: {
-          colorPrimaryHover: "#363062",
-          colorPrimaryActive: "#363062",
+          colorPrimaryHover: "#435585",
+          colorPrimaryActive: "#435585",
           colorError: "#7d0000",
         },
       }}

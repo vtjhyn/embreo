@@ -1,18 +1,22 @@
 import { createBrowserRouter } from "react-router-dom";
-import Layout from "./components/Layout";
+import LayoutView from "./components/layout/Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-
+import AddEvent from "./pages/AddEvent";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: <LayoutView />,
     children: [
       {
         index: true,
         element: <Home />,
       },
+      {
+        path: "/addevent",
+        element: <AddEvent />,
+      }
     ],
   },
   {
@@ -20,7 +24,7 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "*",
+    path: "/*",
     element: <div>NOT FOUND</div>,
   },
 ]);

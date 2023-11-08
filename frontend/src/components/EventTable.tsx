@@ -17,11 +17,7 @@ const data: DataType[] = [
     key: "1",
     eventName: "Chairity",
     vendorName: "Vendor A",
-    confirmedDate: [
-     '2023-11-12',
-      '2023-11-13',
-     '2023-11-14',
-    ],
+    confirmedDate: ["2023-11-12", "2023-11-13", "2023-11-14"],
     status: "PENDING",
     dateCreated: new Date().toDateString(),
   },
@@ -29,22 +25,18 @@ const data: DataType[] = [
     key: "2",
     eventName: "Donation",
     vendorName: "Vendor B ",
-    confirmedDate: [
-      new Date().toDateString(),
-      new Date().toDateString(),
-      new Date().toDateString(),
-    ],
+    confirmedDate: ["2023-10-22", "2023-10-23", "2023-10-24"],
     status: "APPROVED",
     dateCreated: new Date().toDateString(),
   },
 ];
 
-const EventTable = ({onView} : {onView : (data: DataType) => void}) => {
+const EventTable = ({ onView }: { onView: (data: DataType) => void }) => {
   // const onView = (data: any) => {
   //   console.log(data);
   // };
   return (
-    <Table dataSource={data} loading={false} bordered >
+    <Table dataSource={data} loading={false} bordered>
       <Column title="Event Name" dataIndex="eventName" align="center" />
       <Column title="Vendor Name" dataIndex="vendorName" align="center" />
       <Column
