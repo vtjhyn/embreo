@@ -1,42 +1,56 @@
+import React, { useState, useEffect } from "react";
 import { Tag } from "antd";
-import { DataType } from "./EventTable";
 import VendorOption from "./VendorOption";
+import { EventProps } from "../store/slice/eventSlice";
 
 interface ModalContentProps {
-  modalData?: DataType;
+  modalData?: EventProps;
   role: String;
+  close: () => void;
 }
 
-const ModalContent: React.FC<ModalContentProps> = ({ modalData, role }) => {
+const ModalContent: React.FC<ModalContentProps> = ({
+  modalData,
+  role,
+  close,
+}) => {
+  const [data, setData] = useState<EventProps>();
+  useEffect(() => {
+    setData(modalData);
+  }, [modalData]);
   return (
     <div>
-      <p>Event Name: {modalData?.eventName}</p>
-      <p>Vendor Name: {modalData?.vendorName}</p>
+      <p>Event Name: {data?.name.name}</p>
+      <p>Vendor Name: {data?.vendor.name}</p>
       <p>Purposed Dates:</p>
       <ul>
-        {modalData?.confirmedDate.map((date, index) => (
-          <li key={index}>{date}</li>
-        ))}
+        <li>{data?.proposedDates1.split("T")[0]}</li>
+        <li>{data?.proposedDates2.split("T")[0]}</li>
+        <li>{data?.proposedDates3.split("T")[0]}</li>
       </ul>
+      {data?.confirmedDate && (
+        <p>Confirmed Date: {data?.confirmedDate.split("T")[0]}</p>
+      )}
       <p>
         Status:{" "}
         <span>
           <Tag
             color={
-              modalData?.status === "PENDING"
+              data?.status === "PENDING"
                 ? "yellow"
-                : modalData?.status === "REJECTED"
+                : data?.status === "REJECT"
                 ? "red"
                 : "green"
             }
           >
-            {modalData?.status}
+            {data?.status}
           </Tag>
         </span>
       </p>
-      <p>Date Created: {modalData?.dateCreated}</p>
-      {role && role === 'Vendor' && (
-        <VendorOption data={modalData?.confirmedDate} />
+      {data?.remarks && <p>Reason: {data.remarks}</p>}
+      <p>Date created: {data?.createdAt.split("T")[0]}</p>
+      {role && role === "Vendor" && data?.status === "PENDING" && (
+        <VendorOption data={data} close={close} />
       )}
     </div>
   );

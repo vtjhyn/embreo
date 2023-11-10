@@ -1,26 +1,42 @@
-import { useState } from "react";
-import { Button, Modal } from "antd";
-import EventTable, { DataType } from "../components/EventTable";
+import { useState, useEffect } from "react";
+import { Button, Modal, Spin } from "antd";
+import EventTable from "../components/EventTable";
 import ModalContent from "../components/ModalContent";
 import { sessionGet } from "../utils/session";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../utils/hook";
+import {
+  EventProps,
+  getEventByHR,
+  getEventByVendor,
+} from "../store/slice/eventSlice";
 
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalData, setModalData] = useState<DataType | null>(null);
+  const [modalData, setModalData] = useState<EventProps | null>(null);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const { data: events, isLoading } = useAppSelector((state) => state.event);
+
+  console.log(events);
+
   const user = sessionGet("user");
+  const userId = user?.id;
   const role = user?.role;
 
-  const onView = (data: DataType) => {
-    console.log(data);
+  useEffect(() => {
+    if (role && role === "HR") {
+      dispatch(getEventByHR(userId));
+    }
+    if (role && role === "Vendor") {
+      dispatch(getEventByVendor(userId));
+    }
+  }, [role]);
+
+  const onView = (data: EventProps) => {
     setModalData(data);
     setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
   };
 
   const handleCancel = () => {
@@ -31,8 +47,12 @@ const Home = () => {
     navigate("/addevent");
   };
 
-  return (
-    <div className="flex flex-col">
+  return isLoading ? (
+    <div className="h-screen flex justify-center items-center">
+      <Spin />
+    </div>
+  ) : (
+    <div className="flex justify-center gap-2 pt-[80px]">
       {role === "HR" && (
         <Button
           type="primary"
@@ -42,17 +62,22 @@ const Home = () => {
           Add Event
         </Button>
       )}
-      <EventTable onView={onView} />
+      <EventTable onView={onView} eventData={events} loading={isLoading} />
       <Modal
         title="Event Detail"
         open={isModalOpen}
-        onOk={handleOk}
         onCancel={handleCancel}
         centered
         classNames={{ header: "text-center", content: "" }}
         footer={null}
       >
-        {modalData && <ModalContent role={role} modalData={modalData} />}
+        {modalData && (
+          <ModalContent
+            role={role}
+            modalData={modalData}
+            close={handleCancel}
+          />
+        )}
       </Modal>
     </div>
   );

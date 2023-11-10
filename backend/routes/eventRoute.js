@@ -1,11 +1,18 @@
 import express from "express";
-import { getEvent, getEventById, addEvent, approveEvent } from "../controllers/eventController.js";
+import {
+  getEvent,
+  addEvent,
+  getEventByHR,
+  getEventByVendor,
+  eventApprovement,
+} from "../controllers/eventController.js";
 
 const router = express.Router();
 
-router.get("/event:id", getEvent);
-router.get("/event:id", getEventById);
+router.get("/event/:id", getEvent);
+router.get("/event/hr/:id", getEventByHR);
+router.get("/event/vendor/:id", getEventByVendor);
 router.post("/addevent", addEvent);
-router.put("/event:id", approveEvent);
+router.patch("/approvement/:id", eventApprovement);
 
 export default router;

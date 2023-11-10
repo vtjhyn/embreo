@@ -3,18 +3,41 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const getEvent = async (req, res) => {
-  const { companyId, vendorId } = req.params;
   try {
-    const response = await prisma.event.findMany({
+    const response = await prisma.companyHR.findUnique();
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+export const getEventByHR = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const response = await prisma.companyHR.findUnique({
       where: {
-        companyId,
-        vendorId
+        id: userId,
       },
-      include: {
-        company: true,
-        location: true,
-        name: true,
-        vendor: true,
+      select: {
+        events: {
+          include: {
+            company: {
+              select: {
+                company: true,
+              },
+            },
+            name: {
+              select: {
+                name: true,
+              },
+            },
+            vendor: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
     res.status(200).json(response);
@@ -23,18 +46,33 @@ export const getEvent = async (req, res) => {
   }
 };
 
-export const getEventById = async (req, res) => {
-  const eventId = req.params;
+export const getEventByVendor = async (req, res) => {
+  const userId = req.params.id;
   try {
-    const response = await prisma.event.findUnique({
+    const response = await prisma.vendor.findUnique({
       where: {
-        id : eventId
+        id: userId,
       },
-      include: {
-        company: true,
-        location: true,
-        name: true,
-        vendor: true,
+      select: {
+        events: {
+          include: {
+            company: {
+              select: {
+                company: true,
+              },
+            },
+            name: {
+              select: {
+                name: true,
+              },
+            },
+            vendor: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
     res.status(200).json(response);
@@ -44,26 +82,42 @@ export const getEventById = async (req, res) => {
 };
 
 export const addEvent = async (req, res) => {
+  const currentTimestamp = Date.now();
+  const createdAt = new Date(currentTimestamp).toISOString();
   const {
     companyId,
     proposedDates1,
     proposedDates2,
     proposedDates3,
-    locationId,
+    location,
     nameId,
     vendorId,
   } = req.body;
   try {
     const response = await prisma.event.create({
       data: {
-        companyId,
+        company: {
+          connect: {
+            id: companyId,
+          },
+        },
         proposedDates1,
         proposedDates2,
         proposedDates3,
-        locationId,
-        nameId,
+        location,
+        name: {
+          connect: {
+            id: nameId,
+          },
+        },
         status: "PENDING",
-        vendorId,
+        confirmedDate: null,
+        vendor: {
+          connect: {
+            id: vendorId,
+          },
+        },
+        createdAt,
       },
     });
     res.status(201).json(response);
@@ -72,19 +126,19 @@ export const addEvent = async (req, res) => {
   }
 };
 
-export const approveEvent = async (req, res) => {
-  const eventId = req.params.eventId;
+export const eventApprovement = async (req, res) => {
+  const eventId = req.params.id;
   const { status, confirmedDate, remarks } = req.body;
   try {
     const response = await prisma.event.update({
       where: {
-        id : eventId
+        id: eventId,
       },
       data: {
         status,
         confirmedDate,
-        remarks
-      }
+        remarks,
+      },
     });
     res.status(200).json(response);
   } catch (error) {

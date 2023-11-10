@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Tabs, TabsProps } from "antd";
+import { Tabs, TabsProps, message } from "antd";
 import LoginForm, { FieldType } from "../components/form/LoginForm";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../utils/hook";
@@ -40,12 +40,15 @@ const Login = () => {
     data.type = mode;
     const { meta } = await dispatch(loginUser(data));
     if (meta.requestStatus === "fulfilled") {
-      console.log("Login berhasil");
-      navigate("/", {
-        replace: true,
-      });
-    } else {
-      console.log("<<< login failed");
+      message.success("Login success", 2, () =>
+        navigate("/", {
+          replace: true,
+        })
+      );
+    }
+    if (meta.requestStatus === "rejected") {
+      console.log("Login failed");
+      message.error("Login failed, try again", 2);
     }
   };
 

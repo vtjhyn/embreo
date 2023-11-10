@@ -1,94 +1,96 @@
 import React from "react";
 import { Button, Flex, Space, Table, Tag } from "antd";
+import { EventProps } from "../store/slice/eventSlice";
 
 const { Column } = Table;
 
-export interface DataType {
-  key: React.Key;
-  eventName: string;
-  vendorName: string;
-  confirmedDate: string[];
-  status: string;
-  dateCreated: string;
+interface EventTableProps {
+  onView: (data: EventProps) => void;
+  eventData: EventProps[];
+  loading: boolean;
 }
 
-const data: DataType[] = [
-  {
-    key: "1",
-    eventName: "Chairity",
-    vendorName: "Vendor A",
-    confirmedDate: ["2023-11-12", "2023-11-13", "2023-11-14"],
-    status: "PENDING",
-    dateCreated: new Date().toDateString(),
-  },
-  {
-    key: "2",
-    eventName: "Donation",
-    vendorName: "Vendor B ",
-    confirmedDate: ["2023-10-22", "2023-10-23", "2023-10-24"],
-    status: "APPROVED",
-    dateCreated: new Date().toDateString(),
-  },
-];
-
-const EventTable = ({ onView }: { onView: (data: DataType) => void }) => {
-  // const onView = (data: any) => {
-  //   console.log(data);
-  // };
+const EventTable: React.FC<EventTableProps> = ({
+  onView,
+  eventData,
+  loading,
+}) => {
   return (
-    <Table dataSource={data} loading={false} bordered>
-      <Column title="Event Name" dataIndex="eventName" align="center" />
-      <Column title="Vendor Name" dataIndex="vendorName" align="center" />
-      <Column
-        title="ConFirmed Date"
-        dataIndex="confirmedDate"
-        align="center"
-        render={(tags: string[]) => (
-          <Flex vertical align="center" gap="small" justify="center">
-            {tags.map((tag, index) => (
-              <Tag color="geekblue" key={index}>
-                {tag}
-              </Tag>
-            ))}
-          </Flex>
-        )}
-      />
-      <Column
-        title="Status"
-        dataIndex="status"
-        align="center"
-        render={(status: string) => (
-          <Tag
-            color={
-              status === "PENDING"
-                ? "yellow"
-                : status === "REJECTED"
-                ? "red"
-                : status === "APPROVED"
-                ? "green"
-                : "gray"
-            }
-            className="font-bold"
-          >
-            {status}
-          </Tag>
-        )}
-      />
-      <Column title="Date Created" dataIndex="dateCreated" align="center" />
+    loading === false && (
+      <Table
+        dataSource={eventData}
+        loading={false}
+        bordered
+        rowKey={(item) => item.id}
+        className="w-[800px]"
+        pagination={{ pageSize: 5 }}
+        scroll={{ y: 480 }}
+      >
+        <Column
+          title="Event Name"
+          render={(item) => item.name.name}
+          align="center"
+        />
+        <Column
+          title="Vendor Name"
+          render={(item) => item.vendor.name}
+          align="center"
+        />
+        <Column
+          title="Proposed Date"
+          align="center"
+          render={(item) =>
+            item.confirmedDate ? (
+              <Tag color="geekblue">{item.confirmedDate.split("T")[0]}</Tag>
+            ) : (
+              <Flex vertical align="center" gap="small" justify="center">
+                <Tag color="magenta">{item.proposedDates1.split("T")[0]}</Tag>
+                <Tag color="geekblue">{item.proposedDates2.split("T")[0]}</Tag>
+                <Tag color="purple">{item.proposedDates3.split("T")[0]}</Tag>
+              </Flex>
+            )
+          }
+        />
+        <Column
+          title="Status"
+          align="center"
+          render={(item) => (
+            <Tag
+              color={
+                item.status === "PENDING"
+                  ? "yellow"
+                  : item.status === "REJECT"
+                  ? "red"
+                  : item.status === "APPROVE"
+                  ? "green"
+                  : "gray"
+              }
+              className="font-bold"
+            >
+              {item.status}
+            </Tag>
+          )}
+        />
+        <Column
+          title="Date Created"
+          render={(item) => item.createdAt.split("T")[0]}
+          align="center"
+        />
 
-      <Column
-        title="Action"
-        key="action"
-        align="center"
-        render={(record: DataType) => (
-          <Space size="middle">
-            <Button type="primary" onClick={() => onView(record)}>
-              View
-            </Button>
-          </Space>
-        )}
-      />
-    </Table>
+        <Column
+          title="Action"
+          key="action"
+          align="center"
+          render={(record: EventProps) => (
+            <Space size="middle">
+              <Button type="primary" onClick={() => onView(record)}>
+                View
+              </Button>
+            </Space>
+          )}
+        />
+      </Table>
+    )
   );
 };
 

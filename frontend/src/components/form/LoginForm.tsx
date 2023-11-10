@@ -4,10 +4,10 @@ export interface FieldType {
   username: string;
   password: string;
   type?: string;
-};
+}
 
 interface LoginFormProps {
-  onFinish : (data: FieldType) => void;
+  onFinish: (data: FieldType) => void;
   isLoading: boolean;
 }
 
@@ -36,8 +36,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ onFinish, isLoading }) => {
       >
         <Input.Password />
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit" loading={isLoading}>
+      <Form.Item className="flex justify-center">
+        <Button
+          type="primary"
+          htmlType="submit"
+          size="large"
+          loading={isLoading}
+          className="border border-white shadow shadow-white"
+        >
           Submit
         </Button>
       </Form.Item>

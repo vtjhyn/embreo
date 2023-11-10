@@ -34,13 +34,6 @@ model Program {
   events Event[]
 }
 
-model Location {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  address    String
-  postalCode String
-  event      Event[]
-}
-
 model Event {
   id             String    @id @default(auto()) @map("_id") @db.ObjectId
   companyId      String    @db.ObjectId
@@ -48,14 +41,13 @@ model Event {
   proposedDates1 DateTime
   proposedDates2 DateTime
   proposedDates3 DateTime
-  locationId     String    @db.ObjectId
-  location       Location  @relation(fields: [locationId], references: [id])
+  location       String
   nameId         String    @db.ObjectId
   name           Program   @relation(fields: [nameId], references: [id])
   status         String
   remarks        String?
-  confirmedDate  DateTime
+  confirmedDate  DateTime?
   vendorId       String    @db.ObjectId
-  vendor         Vendor    @relation(fields: [nameId], references: [id])
-  createdAt      DateTime
+  vendor         Vendor    @relation(fields: [vendorId], references: [id])
+  createdAt      DateTime 
 }

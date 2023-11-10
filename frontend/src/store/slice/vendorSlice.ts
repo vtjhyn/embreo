@@ -45,7 +45,8 @@ const vendorSlice = createSlice({
     builder.addCase(getVendors.fulfilled, (state, action) => {
       state.isLoading = false;
       const filteredData = action.payload.map((vendor: any) => {
-        const { username, hashedPassword, events, role, ...vendorData } = vendor;
+        const { username, hashedPassword, events, role, ...vendorData } =
+          vendor;
         return vendorData;
       });
       state.data = filteredData;

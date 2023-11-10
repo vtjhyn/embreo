@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     if (config.headers.Authorization !== false) {
-      const token = sessionGet('token');
+      const token = sessionGet("token");
       if (token) {
         config.headers.Authorization = "Bearer " + token;
       } else {

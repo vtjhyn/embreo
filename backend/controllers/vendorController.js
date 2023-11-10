@@ -6,7 +6,7 @@ export const getVendorList = async (req, res) => {
   try {
     const response = await prisma.vendor.findMany({
       include: {
-        events: true
+        events: true,
       },
     });
     res.status(200).json(response);

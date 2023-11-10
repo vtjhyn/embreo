@@ -1,8 +1,7 @@
 import React from "react";
 import { ConfigProvider } from "antd";
 
-
-const AntConfig = ({children}: {children : React.ReactNode}) => {
+const AntConfig = ({ children }: { children: React.ReactNode }) => {
   return (
     <ConfigProvider
       theme={{
@@ -11,13 +10,10 @@ const AntConfig = ({children}: {children : React.ReactNode}) => {
             colorPrimary: "#818FB4",
           },
           Table: {
-            headerBg: '#435585',
-            headerColor: '#ffff',
-            rowHoverBg: '#dae0f0',
+            headerBg: "#435585",
+            headerColor: "#ffff",
+            rowHoverBg: "#dae0f0",
           },
-          Tabs: {
-            cardPaddingLG: '0 0 0 0',
-          }
         },
         token: {
           colorPrimaryHover: "#435585",

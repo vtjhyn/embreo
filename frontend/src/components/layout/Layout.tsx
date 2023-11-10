@@ -15,10 +15,10 @@ const Layout = () => {
     }
   }, [sessionGet("token")]);
   return (
-    <div className="relative h-screen w-screen bg-slate-200">
+    <div className="relative bg-slate-200">
       <Navbar />
       <Container>
-        <Suspense fallback={<Spin tip="Loading" />}>
+        <Suspense fallback={<Spin />}>
           <Outlet />
         </Suspense>
       </Container>

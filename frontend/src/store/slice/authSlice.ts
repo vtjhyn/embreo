@@ -8,7 +8,7 @@ export interface UserProps {
     id: string;
     company: string;
     username: string;
-  }
+  };
   token?: string;
 }
 
@@ -53,7 +53,7 @@ const authSlice = createSlice({
 
       const { hashedPassword, ...userData } = action.payload.user;
       state.data = userData;
-      
+
       sessionSet("token", action.payload.token, 720);
       sessionSet("user", userData, 720);
     });
