@@ -2,7 +2,7 @@ import axios from "axios";
 import { sessionGet } from "./session";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "https://embreo-backend.vercel.app",
 });
 
 axiosInstance.interceptors.request.use(
