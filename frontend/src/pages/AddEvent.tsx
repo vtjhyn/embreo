@@ -22,8 +22,7 @@ const AddEvent = () => {
     dispatch(getProgram());
   }, []);
 
-  const handleSubmit = (data: EventFieldType) => {
-    data.location = data.address + ", " + data.postcode;
+  const onFinish = (data: EventFieldType) => {
     data.companyId = userId;
 
     data.proposedDates1 = new Date(data.proposedDates1).toISOString();
@@ -44,6 +43,7 @@ const AddEvent = () => {
         });
       }
     });
+    console.log(data)
   };
   return (
     <div className="h-full flex justify-center items-center">
@@ -51,7 +51,7 @@ const AddEvent = () => {
         user={user}
         vendorList={vendorlist}
         programList={programList}
-        onFinish={handleSubmit}
+        onFinish={onFinish}
       />
     </div>
   );

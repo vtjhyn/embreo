@@ -1,10 +1,11 @@
 import { useMemo, useState, useRef, useEffect } from "react";
-import { Input, Button, Form, Select, InputRef, Divider, Space } from "antd";
+import { Input, Button, Form, Select, Divider, Space, List, InputRef } from "antd";
 import { VendorProps } from "../../store/slice/vendorSlice";
 import { UserProps } from "../../store/slice/authSlice";
 import { PlusOutlined } from "@ant-design/icons";
 import { ProgramProps, addProgram } from "../../store/slice/programSlice";
 import { useAppDispatch, useAppSelector } from "../../utils/hook";
+import PlacesAutocomplete from "react-places-autocomplete";
 
 export interface EventFieldType {
   companyId: string;
@@ -13,8 +14,6 @@ export interface EventFieldType {
   proposedDates2: Date | string;
   proposedDates3: Date | string;
   location: string;
-  postcode: string;
-  address: string;
 }
 
 interface EventFormProps {
@@ -32,26 +31,27 @@ const EventForm: React.FC<EventFormProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const [dataProgram, setDataProgram] = useState<ProgramProps[]>([]);
-
   const eventLoading = useAppSelector((state) => state.event.isLoading);
   const programLoading = useAppSelector((state) => state.program.isLoading);
-
+  const [autocompleteValue, setAutocompleteValue] = useState<string>("");
+  const handleSelect = (value: string) => {
+    setAutocompleteValue(value);
+  };
+  const handleInputChange = (value: string) => {
+    setAutocompleteValue(value);
+  };
   const vendors = useMemo(
     () => vendorList?.map((item) => ({ label: item.name, value: item.id })),
     [vendorList]
   );
-
   useEffect(() => {
     setDataProgram(programList);
   }, [programList]);
-
   const [name, setName] = useState("");
   const inputRef = useRef<InputRef>(null);
-
   const onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
-
   const addItem = (
     e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>
   ) => {
@@ -66,7 +66,6 @@ const EventForm: React.FC<EventFormProps> = ({
       }
     });
     setName("");
-
     inputRef.current?.focus();
   };
 
@@ -92,7 +91,6 @@ const EventForm: React.FC<EventFormProps> = ({
             <>
               {menu}
               <Divider style={{ margin: "8px 0" }} />
-
               <Input
                 placeholder="Please enter item"
                 ref={inputRef}
@@ -155,30 +153,48 @@ const EventForm: React.FC<EventFormProps> = ({
         </Space>
       </Space.Compact>
 
-      <Space.Compact block>
-        <Space>
-          <Form.Item
-            label="Postcode"
-            name="postcode"
-            rules={[
-              { required: true, message: "Please input your Date Option 1!" },
-            ]}
-            className="w-[80%] "
-          >
-            <Input />
-          </Form.Item>
-        </Space>
-        <Form.Item
-          label="Address"
-          name="address"
-          rules={[
-            { required: true, message: "Please input your Date Option 2!" },
-          ]}
-          className="w-full "
-        >
-          <Input.TextArea autoSize />
-        </Form.Item>
-      </Space.Compact>
+      <Form.Item
+        label="Location"
+        name="location"
+        rules={[
+          { required: true, message: "Please input your Date Option 2!" },
+        ]}
+        className="w-full "
+      >
+        <PlacesAutocomplete onChange={handleInputChange}>
+          {({
+            getInputProps,
+            suggestions,
+            getSuggestionItemProps,
+            loading,
+          }) => (
+            <>
+              <Input
+                {...getInputProps({
+                  placeholder: "Search Places ...",
+                  className: "location-search-input",
+                })}
+                value={autocompleteValue}
+                onSelect={() => handleSelect}
+              />
+              <div className="max-h-[100px] overflow-y-scroll">
+                {loading && <div>Loading...</div>}
+                {suggestions.map((suggestion) => (
+                  <List
+                    {...getSuggestionItemProps(suggestion)}
+                    key={suggestion.placeId}
+                    size="small"
+                    bordered
+                    className="bg-slate-200"
+                  >
+                    <List.Item>{suggestion.description}</List.Item>
+                  </List>
+                ))}
+              </div>
+            </>
+          )}
+        </PlacesAutocomplete>
+      </Form.Item>
 
       <Form.Item
         label="Vendor Name"
