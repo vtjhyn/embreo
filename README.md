@@ -1,5 +1,8 @@
 # Embreo-Test
 
+![Home-CompanyHR](https://github.com/vtjhyn/embreo/assets/112056232/a6356439-843e-48d9-9f79-646a8e1b1c1e)
+
+
 This is a web application for an event management system. Below are the features of this program:
 
 1. **Multi-role**
@@ -65,3 +68,5 @@ The user data is organized in the following tables:
 The entire program is deployed on Vercel. You can try it out by visiting the following link:
 
 **DEMO: [https://embreo.vercel.app/](https://embreo.vercel.app/)**
+
+You can find the complete documents and images in the "documentation" folder in this repository; enjoy!
